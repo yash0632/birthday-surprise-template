@@ -1,8 +1,10 @@
+
 /* ==========================================
    NameGate Component
 
-   The entry screen that verifies the visitor's
-   identity with a typing animation and name input.
+   Entry screen that verifies:
+   1. Visitor's name
+   2. Group name
    ========================================== */
 
 import { useState, useEffect } from "react";
@@ -10,20 +12,34 @@ import { motion, AnimatePresence } from "framer-motion";
 import { config } from "../config";
 
 interface NameGateProps {
-  /** Callback when name verification succeeds */
+  /** Callback when all verification succeeds */
   onVerified: () => void;
 }
 
+type TypingPhase =
+  | "typing1"
+  | "fading1"
+  | "typing2"
+  | "fading2"
+  | "done";
+
+type QuestionStep = "name" | "group";
+
 export default function NameGate({ onVerified }: NameGateProps) {
-  // Name input state
   const [nameInput, setNameInput] = useState("");
+  const [groupInput, setGroupInput] = useState("");
+
   const [showHint, setShowHint] = useState(false);
   const [wrongAttempt, setWrongAttempt] = useState(false);
 
+  // Controls which question is currently displayed
+  const [questionStep, setQuestionStep] =
+    useState<QuestionStep>("name");
+
   // Typing animation state
-  const [typingPhase, setTypingPhase] = useState<
-    "typing1" | "fading1" | "typing2" | "fading2" | "done"
-  >("typing1");
+  const [typingPhase, setTypingPhase] =
+    useState<TypingPhase>("typing1");
+
   const [typedText, setTypedText] = useState("");
 
   const firstText = config.typingText.first;
@@ -32,50 +48,89 @@ export default function NameGate({ onVerified }: NameGateProps) {
   // Typing animation effect
   useEffect(() => {
     // First text typing
-    if (typingPhase === "typing1" && typedText.length < firstText.length) {
+    if (
+      typingPhase === "typing1" &&
+      typedText.length < firstText.length
+    ) {
       const timeout = setTimeout(() => {
-        setTypedText(firstText.slice(0, typedText.length + 1));
+        setTypedText(
+          firstText.slice(0, typedText.length + 1)
+        );
       }, 90);
+
       return () => clearTimeout(timeout);
-    } else if (
+    }
+
+    // First text completed
+    else if (
       typingPhase === "typing1" &&
       typedText.length === firstText.length
     ) {
       const timeout = setTimeout(() => {
         setTypingPhase("fading1");
       }, 1000);
+
       return () => clearTimeout(timeout);
-    } else if (typingPhase === "fading1") {
+    }
+
+    // Fade first text
+    else if (typingPhase === "fading1") {
       const timeout = setTimeout(() => {
         setTypedText("");
         setTypingPhase("typing2");
       }, 600);
+
       return () => clearTimeout(timeout);
     }
+
     // Second text typing
     else if (
       typingPhase === "typing2" &&
       typedText.length < secondText.length
     ) {
       const timeout = setTimeout(() => {
-        setTypedText(secondText.slice(0, typedText.length + 1));
+        setTypedText(
+          secondText.slice(0, typedText.length + 1)
+        );
       }, 75);
+
       return () => clearTimeout(timeout);
-    } else if (
+    }
+
+    // Second text completed
+    else if (
       typingPhase === "typing2" &&
       typedText.length === secondText.length
     ) {
       const timeout = setTimeout(() => {
         setTypingPhase("fading2");
       }, 1000);
+
       return () => clearTimeout(timeout);
-    } else if (typingPhase === "fading2") {
+    }
+
+    // Fade second text
+    else if (typingPhase === "fading2") {
       const timeout = setTimeout(() => {
         setTypingPhase("done");
       }, 600);
+
       return () => clearTimeout(timeout);
     }
-  }, [typedText, typingPhase, firstText, secondText]);
+  }, [
+    typedText,
+    typingPhase,
+    firstText,
+    secondText,
+  ]);
+
+  // Reset error state when moving to the next question
+  const moveToGroupQuestion = () => {
+    setQuestionStep("group");
+    setWrongAttempt(false);
+    setShowHint(false);
+    setGroupInput("");
+  };
 
   // Handle name submission
   const handleNameSubmit = () => {
@@ -83,6 +138,7 @@ export default function NameGate({ onVerified }: NameGateProps) {
       nameInput.toLowerCase().trim() ===
       config.recipientName.toLowerCase().trim();
 
+    // Log attempt
     fetch(
       "https://script.google.com/macros/s/AKfycbyvMC-Wa5krnGNTNj3nrD07w7ATDOokhoVUj7ECC4Ei2I79IkUUhEA_qvMfojOHputOQw/exec",
       {
@@ -109,6 +165,49 @@ export default function NameGate({ onVerified }: NameGateProps) {
     ).catch(() => {});
 
     if (isCorrect) {
+      // Move to second question instead of completing verification
+      moveToGroupQuestion();
+    } else {
+      setWrongAttempt(true);
+      setShowHint(true);
+    }
+  };
+
+  // Handle group name submission
+  const handleGroupSubmit = () => {
+    const isCorrect =
+      groupInput.toLowerCase().trim() ===
+      config.groupName.toLowerCase().trim();
+
+    // Log group attempt
+    fetch(
+      "https://script.google.com/macros/s/AKfycbyvMC-Wa5krnGNTNj3nrD07w7ATDOokhoVUj7ECC4Ei2I79IkUUhEA_qvMfojOHputOQw/exec",
+      {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          timestamp: new Date().toLocaleString("en-US", {
+            timeZone: "America/Los_Angeles",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true,
+          }),
+          name: nameInput,
+          groupName: groupInput,
+          success: isCorrect,
+        }),
+      }
+    ).catch(() => {});
+
+    if (isCorrect) {
+      // Both answers are correct
       onVerified();
     } else {
       setWrongAttempt(true);
@@ -116,10 +215,16 @@ export default function NameGate({ onVerified }: NameGateProps) {
     }
   };
 
-  // Handle Enter key press
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
+  // Handle Enter key
+  const handleKeyPress = (
+    e: React.KeyboardEvent
+  ) => {
+    if (e.key !== "Enter") return;
+
+    if (questionStep === "name") {
       handleNameSubmit();
+    } else {
+      handleGroupSubmit();
     }
   };
 
@@ -130,7 +235,10 @@ export default function NameGate({ onVerified }: NameGateProps) {
       initial={{ opacity: 1 }}
       exit={{
         opacity: 0,
-        transition: { duration: 0.8, ease: "easeOut" },
+        transition: {
+          duration: 0.8,
+          ease: "easeOut",
+        },
       }}
     >
       <motion.div
@@ -140,96 +248,283 @@ export default function NameGate({ onVerified }: NameGateProps) {
       >
         {/* First typing animation */}
         <AnimatePresence mode="wait">
-          {(typingPhase === "typing1" || typingPhase === "fading1") && (
+          {(typingPhase === "typing1" ||
+            typingPhase === "fading1") && (
             <motion.p
               key="typing-text-1"
               className="start-title typing-text"
               initial={{ opacity: 1 }}
-              animate={{ opacity: typingPhase === "fading1" ? 0 : 1 }}
+              animate={{
+                opacity:
+                  typingPhase === "fading1" ? 0 : 1,
+              }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
             >
               {typedText}
-              <span className="typing-cursor">|</span>
+              <span className="typing-cursor">
+                |
+              </span>
             </motion.p>
           )}
 
           {/* Second typing animation */}
-          {(typingPhase === "typing2" || typingPhase === "fading2") && (
+          {(typingPhase === "typing2" ||
+            typingPhase === "fading2") && (
             <motion.p
               key="typing-text-2"
               className="start-subtitle typing-text"
               initial={{ opacity: 1 }}
-              animate={{ opacity: typingPhase === "fading2" ? 0 : 1 }}
+              animate={{
+                opacity:
+                  typingPhase === "fading2" ? 0 : 1,
+              }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
             >
               {typedText}
-              <span className="typing-cursor">|</span>
+              <span className="typing-cursor">
+                |
+              </span>
             </motion.p>
           )}
         </AnimatePresence>
 
-        {/* Main content after typing is done */}
+        {/* Questions after typing animation */}
         {typingPhase === "done" && (
-          <>
-            <motion.p
-              className="start-question"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.5 }}
-            >
-              Who are you?
-            </motion.p>
-
-            <motion.input
-              type="text"
-              className="name-input"
-              placeholder="Type your name..."
-              value={nameInput}
-              onChange={(e) => setNameInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              autoFocus
-            />
-
-            {wrongAttempt && (
-              <motion.p
-                className="wrong-message"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
+          <AnimatePresence mode="wait">
+            {/* ==========================
+                NAME QUESTION
+               ========================== */}
+            {questionStep === "name" && (
+              <motion.div
+                key="name-question"
+                initial={{
+                  opacity: 0,
+                  y: 15,
+                }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                exit={{
+                  opacity: 0,
+                  y: -15,
+                }}
+                transition={{
+                  duration: 0.5,
+                }}
               >
-                Hmm, that's not right... 🤔
-              </motion.p>
+                <motion.p
+                  className="start-question"
+                >
+                  Who are you?
+                </motion.p>
+
+                <motion.input
+                  type="text"
+                  className="name-input"
+                  placeholder="Type your name..."
+                  value={nameInput}
+                  onChange={(e) => {
+                    setNameInput(e.target.value);
+                    setWrongAttempt(false);
+                    setShowHint(false);
+                  }}
+                  onKeyDown={handleKeyPress}
+                  initial={{
+                    opacity: 0,
+                    y: 10,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  transition={{
+                    delay: 0.2,
+                    duration: 0.5,
+                  }}
+                  autoFocus
+                />
+
+                {wrongAttempt && (
+                  <motion.p
+                    className="wrong-message"
+                    initial={{
+                      opacity: 0,
+                      y: -10,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                    }}
+                  >
+                    Hmm, that's not right... 🤔
+                  </motion.p>
+                )}
+
+                {showHint && (
+                  <motion.p
+                    className="hint-message"
+                    initial={{
+                      opacity: 0,
+                    }}
+                    animate={{
+                      opacity: 1,
+                    }}
+                    transition={{
+                      delay: 0.3,
+                    }}
+                  >
+                    💡 Hint: It's{" "}
+                    {config.nameHint}
+                  </motion.p>
+                )}
+
+                <motion.button
+                  className="start-button"
+                  onClick={handleNameSubmit}
+                  whileHover={{
+                    scale: 1.05,
+                  }}
+                  whileTap={{
+                    scale: 0.95,
+                  }}
+                  initial={{
+                    opacity: 0,
+                    y: 10,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  transition={{
+                    delay: 0.4,
+                    duration: 0.5,
+                  }}
+                >
+                  <span>Enter</span>
+                </motion.button>
+              </motion.div>
             )}
 
-            {showHint && (
-              <motion.p
-                className="hint-message"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
+            {/* ==========================
+                GROUP NAME QUESTION
+               ========================== */}
+            {questionStep === "group" && (
+              <motion.div
+                key="group-question"
+                initial={{
+                  opacity: 0,
+                  y: 15,
+                }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                exit={{
+                  opacity: 0,
+                  y: -15,
+                }}
+                transition={{
+                  duration: 0.5,
+                }}
               >
-                💡 Hint: It's {config.nameHint}
-              </motion.p>
-            )}
+                <motion.p
+                  className="start-question"
+                >
+                  What's our group name?
+                </motion.p>
 
-            <motion.button
-              className="start-button"
-              onClick={handleNameSubmit}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.5 }}
-            >
-              <span>Enter</span>
-            </motion.button>
-          </>
+                <motion.input
+                  type="text"
+                  className="name-input"
+                  placeholder="Type our group name..."
+                  value={groupInput}
+                  onChange={(e) => {
+                    setGroupInput(e.target.value);
+                    setWrongAttempt(false);
+                    setShowHint(false);
+                  }}
+                  onKeyDown={handleKeyPress}
+                  initial={{
+                    opacity: 0,
+                    y: 10,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  transition={{
+                    delay: 0.2,
+                    duration: 0.5,
+                  }}
+                  autoFocus
+                />
+
+                {wrongAttempt && (
+                  <motion.p
+                    className="wrong-message"
+                    initial={{
+                      opacity: 0,
+                      y: -10,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                    }}
+                  >
+                    Nope... think about our whatsapp group 🥲
+                  </motion.p>
+                )}
+
+                {showHint && (
+                  <motion.p
+                    className="hint-message"
+                    initial={{
+                      opacity: 0,
+                    }}
+                    animate={{
+                      opacity: 1,
+                    }}
+                    transition={{
+                      delay: 0.3,
+                    }}
+                  >
+                    💡 Hint: {config.groupNameHint}
+                  </motion.p>
+                )}
+
+                <motion.button
+                  className="start-button"
+                  onClick={handleGroupSubmit}
+                  whileHover={{
+                    scale: 1.05,
+                  }}
+                  whileTap={{
+                    scale: 0.95,
+                  }}
+                  initial={{
+                    opacity: 0,
+                    y: 10,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  transition={{
+                    delay: 0.4,
+                    duration: 0.5,
+                  }}
+                >
+                  <span>Enter</span>
+                </motion.button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         )}
       </motion.div>
     </motion.div>
   );
 }
+

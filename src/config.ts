@@ -7,11 +7,14 @@
 
 export const config = {
   /* Name Verification Gate */
-  recipientName: "love", // required name to enter
-  nameHint: '4 letters, starts with "L"', // hint on wrong name
+  recipientName: "Bhavna", // required name to enter
+  nameHint: '6 letters, starts with "B"', // hint on wrong name
+
+  groupName: "OnlyPlans", // required group name to enter
+  groupNameHint: "Did you forget OnlyPlans?🥲", // hint on wrong group name
 
   /* Section Headings */
-  soloGalleryTitle: "✨ My Birthday Girl ✨", // solo gallery title
+  soloGalleryTitle: "✨ Birthday Girl ✨", // solo gallery title
   messageTitle: "To My Favorite Person", // letter section title
   footerText: "Made with 💗 just for you", // footer text
 

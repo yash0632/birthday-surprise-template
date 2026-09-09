@@ -1,0 +1,110 @@
+/* ==========================================
+   Group Memory Screen
+   ========================================== */
+
+.group-memory {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #1a1a2e;
+
+  padding: 2rem 1.5rem;
+  overflow: hidden;
+}
+
+.group-memory-content {
+  width: 100%;
+  max-width: 500px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+.group-memory-text {
+  font-family: var(--font-body);
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  color: rgba(255, 182, 193, 0.95);
+
+  margin: 0 0 2rem;
+}
+
+.group-memory-image-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: min(420px, 85vw);
+
+  padding: 1rem;
+
+  background: rgba(255, 255, 255, 0.95);
+
+  border-radius: 24px;
+
+  box-shadow:
+    0 15px 50px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(236, 72, 153, 0.2);
+}
+
+.group-memory-image {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  object-fit: contain;
+
+  border-radius: 12px;
+}
+
+.group-memory-caption {
+  font-family: var(--font-handwritten);
+  font-size: clamp(1.3rem, 4vw, 1.8rem);
+
+  color: rgba(255, 215, 220, 0.95);
+
+  margin: 1.5rem 0 0;
+}
+
+.group-memory-button {
+  margin-top: 2rem;
+
+  padding: 0.75rem 2rem;
+
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+
+  color: #fff;
+
+  background: linear-gradient(
+    135deg,
+    #ec4899 0%,
+    #be185d 100%
+  );
+
+  border: none;
+  border-radius: 50px;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 20px rgba(236, 72, 153, 0.4),
+    0 0 40px rgba(236, 72, 153, 0.2);
+
+  transition: all 0.3s ease;
+}
+
+.group-memory-button:hover {
+  box-shadow:
+    0 6px 30px rgba(236, 72, 153, 0.5),
+    0 0 60px rgba(236, 72, 153, 0.3);
+}

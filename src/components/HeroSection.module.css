@@ -26,6 +26,39 @@
 }
 
 /* ==========================================
+   Floating Ambient Particles
+   ========================================== */
+.particleField {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  bottom: 0;
+  filter: drop-shadow(0 2px 6px rgba(244, 114, 182, 0.25));
+  will-change: transform, opacity;
+}
+
+/* ==========================================
+   Greeting
+   ========================================== */
+.greeting {
+  font-family: var(--font-handwritten);
+  font-size: clamp(1.5rem, 6vw, 2.75rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 0.75rem;
+  text-shadow: 0 2px 14px rgba(244, 114, 182, 0.3);
+  padding: 0 1rem;
+  z-index: 1;
+}
+
+/* ==========================================
    Typography
    ========================================== */
 .heading {
@@ -39,13 +72,37 @@
   padding: 0 1rem;
 }
 
+/* Cake wrapper + glow */
+.cakeWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1.5rem 0;
+  z-index: 1;
+}
+
+.cakeGlow {
+  position: absolute;
+  width: clamp(180px, 46vw, 300px);
+  height: clamp(180px, 46vw, 300px);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(244, 114, 182, 0.45) 0%,
+    rgba(244, 114, 182, 0) 70%
+  );
+  z-index: 0;
+}
+
 /* Birthday Cake GIF */
 .cakeGif {
+  position: relative;
   width: clamp(150px, 40vw, 250px);
   height: auto;
-  margin: 1.5rem 0;
   border-radius: 16px;
   filter: drop-shadow(0 8px 20px rgba(244, 114, 182, 0.25));
+  z-index: 1;
 }
 
 /* Banner Image */
@@ -53,13 +110,18 @@
   width: clamp(200px, 70vw, 400px);
   height: auto;
   margin-bottom: 1rem;
+  z-index: 1;
+  filter: drop-shadow(0 6px 16px rgba(244, 114, 182, 0.2));
 }
 
 .subtitle {
+  font-family: var(--font-body);
+  font-style: italic;
   font-size: clamp(0.9rem, 2.5vw, 1.1rem);
   color: var(--text-light);
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  z-index: 1;
 }
 
 /* ==========================================
@@ -68,6 +130,7 @@
 .nextButton {
   margin-top: 1.5rem;
   animation: pulse-glow 2s infinite;
+  z-index: 1;
 }
 
 .arrow {

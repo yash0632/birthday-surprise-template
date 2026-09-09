@@ -15,7 +15,7 @@ import PhotoGallery from "./components/PhotoGallery";
 import LetterSection from "./components/LetterSection";
 import backgroundMusic from "./assets/music.mp3";
 import "./App.css";
-
+import GlimpseReveal from "./components/GlimpseReveal";
 // Import photos from assets/solo
 import s1 from "./assets/solo/s1.png";
 import s2 from "./assets/solo/s2.png";
@@ -39,6 +39,7 @@ import t7 from "./assets/together/t7.png";
 import t8 from "./assets/together/t8.png";
 import t9 from "./assets/together/t9.png";
 
+
 // Photo arrays
 const SOLO_PHOTOS = [s1, s2, s3, s4, s5, s6, s7, s8, s9];
 const TOGETHER_PHOTOS = config.togetherGallery.enabled
@@ -51,7 +52,8 @@ const SECTION_LETTER = config.togetherGallery.enabled ? 3 : 2;
 
 export default function App() {
   // Track if user has clicked start
-  const [showStartScreen, setShowStartScreen] = useState(true);
+  
+
 
   // Track which section is currently active (0 = Hero, 1 = Solo Photos, 2 = Together Photos, 3 = Letter)
   const [currentSection, setCurrentSection] = useState(0);
@@ -59,6 +61,9 @@ export default function App() {
   // Audio state
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+    const [phase, setPhase] = useState<"gate" | "glimpse" | "main">("gate");
+  
 
   // Confetti effect - fires from both sides
   const runConfetti = () => {
@@ -97,15 +102,16 @@ export default function App() {
 
   // Handle successful name verification
   const handleVerified = () => {
-    setShowStartScreen(false);
-    // Run confetti
-    runConfetti();
-    // Start music
-    if (audioRef.current) {
-      audioRef.current.play().catch(() => {
-        // Autoplay blocked
-      });
-    }
+    setPhase("glimpse");
+
+    // Let the NameGate exit + glimpse animation play out, then reveal Hero
+    setTimeout(() => {
+      setPhase("main");
+      runConfetti();
+      if (audioRef.current) {
+        audioRef.current.play().catch(() => {});
+      }
+    }, 3400); // tune this — see note below
   };
 
   // Toggle mute/unmute
@@ -151,12 +157,44 @@ export default function App() {
       <audio ref={audioRef} src={backgroundMusic} loop preload="auto" />
 
       <AnimatePresence mode="wait">
-        {/* Start Screen - Name Verification Gate */}
-        {showStartScreen && <NameGate onVerified={handleVerified} />}
+        {phase === "gate" && <NameGate key="gate" onVerified={handleVerified} />}
+        {phase === "glimpse" && <GlimpseReveal key="glimpse" />}
       </AnimatePresence>
 
+
+      {phase === "main" && (
+        <button
+          className="music-toggle"
+          onClick={toggleMute}
+          aria-label={isMuted ? "Unmute music" : "Mute music"}
+        >
+          {isMuted ? (
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M11 5L6 9H2v6h4l5 4V5z" />
+              <line x1="23" y1="9" x2="17" y2="15" />
+              <line x1="17" y1="9" x2="23" y2="15" />
+            </svg>
+          ) : (
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M11 5L6 9H2v6h4l5 4V5z" />
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+            </svg>
+          )}
+        </button>
+      )}
       {/* Music Toggle Button - only show after start */}
-      {!showStartScreen && (
+      {phase === "main" && (
         <button
           className="music-toggle"
           onClick={toggleMute}
@@ -189,7 +227,7 @@ export default function App() {
       )}
 
       {/* Main Content - only show after start */}
-      {!showStartScreen && (
+      {phase === "main" && (
         <AnimatePresence mode="wait">
           {currentSection === 0 && (
             <motion.div
