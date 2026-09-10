@@ -343,3 +343,76 @@
     gap: min(2vw, 2vh);
   }
 }
+video.photo {
+  background: #000;
+}
+
+/* Small heart badge marking a video memory */
+.videoBadge {
+  position: absolute;
+  bottom: min(1.2vh, 10px);
+  right: min(0.6vh, 6px);
+  font-size: 0.65rem;
+  color: #f472b6;
+  background: rgba(255, 255, 255, 0.85);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(244, 114, 182, 0.4);
+  animation: floatHeart 2.5s ease-in-out infinite;
+}
+
+/* Optional handwritten caption under a memory, shown on hover */
+.polaroid {
+  position: relative; /* needed for badge + caption positioning */
+}
+
+.caption {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: "Dancing Script", cursive;
+  font-size: 0.85rem;
+  color: #8b4563;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.photoFrame:hover .caption {
+  opacity: 1;
+}
+
+.polaroid {
+  position: relative;
+  overflow: hidden;
+}
+
+.photo {
+  transition: opacity 0.4s ease;
+}
+
+/* Shimmer skeleton while a photo/video is loading */
+.shimmer {
+  position: absolute;
+  inset: min(1.2vh, 10px) min(1.2vh, 10px) min(3.5vh, 28px) min(1.2vh, 10px);
+  background: linear-gradient(
+    90deg,
+    #fce7f3 0%,
+    #fdf2f8 50%,
+    #fce7f3 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmerMove 1.4s ease-in-out infinite;
+  border-radius: 2px;
+}
+
+@keyframes shimmerMove {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

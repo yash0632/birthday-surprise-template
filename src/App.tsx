@@ -8,7 +8,7 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
-import { config } from "./config";
+import { config, type MediaItem } from "./config";
 import NameGate from "./components/NameGate";
 import HeroSection from "./components/HeroSection";
 import PhotoGallery from "./components/PhotoGallery";
@@ -23,9 +23,12 @@ import s3 from "./assets/solo/s3.png";
 import s4 from "./assets/solo/s4.png";
 import s5 from "./assets/solo/s5.png";
 import s6 from "./assets/solo/s6.png";
-import s7 from "./assets/solo/s7.png";
-import s8 from "./assets/solo/s8.png";
-import s9 from "./assets/solo/s9.png";
+import v1 from "./assets/solo/v1.mp4";
+import v2 from "./assets/solo/v2.mp4";
+import v3 from "./assets/solo/v3.mp4";
+import v1_poster from "./assets/solo/v1-poster.jpg";
+import v2_poster from "./assets/solo/v2-poster.jpg";
+import v3_poster from "./assets/solo/v3-poster.jpg";
 
 // Import photos from assets/together (only if enabled)
 // These imports are tree-shaken if togetherGallery.enabled is false
@@ -41,9 +44,29 @@ import t9 from "./assets/together/t9.png";
 
 
 // Photo arrays
-const SOLO_PHOTOS = [s1, s2, s3, s4, s5, s6, s7, s8, s9];
-const TOGETHER_PHOTOS = config.togetherGallery.enabled
-  ? [t1, t2, t3, t4, t5, t6, t7, t8, t9]
+const SOLO_PHOTOS: MediaItem[] = [
+  { type: "photo", src: s1 },
+  { type: "video", src: v1, poster: v1_poster, caption: "that laugh though 😂" },
+  { type: "photo", src: s2 },
+  { type: "photo", src: s3 },
+  { type: "video", src: v2, poster: v2_poster },
+  { type: "photo", src: s4 },
+  { type: "photo", src: s5 },
+  { type: "photo", src: s6 },
+  { type: "video", src: v3, poster: v3_poster, caption: "best day ever" },
+];
+const TOGETHER_PHOTOS : MediaItem[] = config.togetherGallery.enabled
+  ? [
+      { type: "photo", src: t1 },
+      { type: "photo", src: t2 },
+      { type: "photo", src: t3 },
+      { type: "photo", src: t4 },
+      { type: "photo", src: t5 },
+      { type: "photo", src: t6 },
+      { type: "photo", src: t7 },
+      { type: "photo", src: t8 },
+      { type: "photo", src: t9 },
+    ]
   : [];
 
 // Calculate total sections and indices based on config

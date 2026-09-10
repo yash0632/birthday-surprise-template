@@ -59,4 +59,12 @@ export const config = {
   },
 };
 
+// config.ts
+export interface MediaItem {
+  type: "photo" | "video";
+  src: string;
+  poster?: string; // small thumbnail shown instantly for videos
+  caption?: string;
+}
+
 export type Config = typeof config;
