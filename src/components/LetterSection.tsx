@@ -40,18 +40,26 @@ export default function LetterSection() {
   // Paragraphs fully typed and finalized
   const [completedParagraphs, setCompletedParagraphs] = useState<string[]>([]);
   // The paragraph currently being typed
-  const [currentParagraphIndex, setCurrentParagraphIndex] = useState(0);
+  const [currentParagraphIndex] = useState(0);
   const [currentTypedText, setCurrentTypedText] = useState("");
   const [isTypingComplete, setIsTypingComplete] = useState(false);
 
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const isUserScrolledAwayRef = useRef(false);
+
+  // Guards against the typing effect ever running more than once,
+  // no matter how many times isInView fires or the effect re-triggers
+  // (e.g. on scroll). Without this, scrolling could restart the whole
+  // typing sequence and duplicate paragraphs at the bottom.
+  const hasStartedTypingRef = useRef(false);
 
   const paragraphs = config.message;
 
   useEffect(() => {
-    if (!isInView) return;
+    if (!isInView || hasStartedTypingRef.current) return;
+    hasStartedTypingRef.current = true; // lock — this effect body can only ever run once
 
     let paraIndex = 0;
     let charIndex = 0;
@@ -104,9 +112,28 @@ export default function LetterSection() {
     };
   }, [isInView, paragraphs]);
 
-  // Keep the letter auto-scrolled to the latest typed line
+  // Detect manual scroll — if she scrolls up, stop auto-following;
+  // if she scrolls back down near the bottom herself, resume auto-follow
   useEffect(() => {
-    if (contentRef.current) {
+    const el = contentRef.current;
+    if (!el) return;
+
+    const handleScroll = () => {
+      const distanceFromBottom =
+        el.scrollHeight - el.scrollTop - el.clientHeight;
+      // Small threshold so it still counts as "at bottom" even with
+      // sub-pixel rounding differences
+      isUserScrolledAwayRef.current = distanceFromBottom > 40;
+    };
+
+    el.addEventListener("scroll", handleScroll, { passive: true });
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Keep the letter auto-scrolled to the latest typed line —
+  // but only if she hasn't manually scrolled up to reread something
+  useEffect(() => {
+    if (contentRef.current && !isUserScrolledAwayRef.current) {
       contentRef.current.scrollTop = contentRef.current.scrollHeight;
     }
   }, [completedParagraphs, currentTypedText]);
@@ -117,6 +144,7 @@ export default function LetterSection() {
       setCompletedParagraphs(paragraphs);
       setCurrentTypedText("");
       setIsTypingComplete(true);
+      isUserScrolledAwayRef.current = false; // let it settle at the bottom after skip
     }
   };
 

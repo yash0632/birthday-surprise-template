@@ -5,7 +5,7 @@
    one by one (not scrollable)
    ========================================== */
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { config, type MediaItem } from "./config";
@@ -35,7 +35,7 @@ import m3_poster from "./assets/solo/m3-poster.jpeg";
 import m4_poster from "./assets/solo/m4-poster.jpeg";
 import m5_poster from "./assets/solo/m5-poster.jpeg";
 import m6_poster from "./assets/solo/m6-poster.jpeg";
-
+import onlyplansImg from "./assets/onlyplans.jpg";
 
 
 
@@ -71,6 +71,37 @@ export default function App() {
   const audioRef = useRef<HTMLAudioElement>(null);
 
     const [phase, setPhase] = useState<"gate" | "glimpse" | "main">("gate");
+
+  useEffect(() => {
+  // Preload the glimpse image
+  new Image().src = onlyplansImg;
+
+  // Preload every photo and video poster in the gallery — these are
+  // small (a few KB–hundred KB each) so it's safe to load them all
+  // upfront, meaning by the time she reaches the gallery, every card
+  // already has something to show instantly instead of a blank frame
+  SOLO_PHOTOS.forEach((item) => {
+    if (item.type === "photo") {
+      new Image().src = item.src;
+    } else if (item.poster) {
+      new Image().src = item.poster;
+    }
+  });
+
+  // Only warm up the actual video files for the first couple of clips
+  // she'll reach almost immediately when scrolling the gallery.
+  // The rest stay lazy — loaded only when they scroll into view,
+  // exactly as PhotoGallery already handles.
+  const videosToPreload = SOLO_PHOTOS.filter((item) => item.type === "video").slice(0, 2);
+
+  videosToPreload.forEach((item) => {
+    const video = document.createElement("video");
+    video.src = item.src;
+    video.preload = "auto";
+    // no need to attach it to the DOM — just triggers the browser to
+    // start fetching and buffering it in the background
+  });
+}, []);
   
 
   // Confetti effect - fires from both sides

@@ -86,7 +86,7 @@ message: [
   /* Typing Animation Text (shown on the start screen) */
   typingText: {
     first: "Hey, wait a second!",
-    second: "This website is only for someone special.",
+    second: "This website is only for someone special to us.",
   },
 };
 
