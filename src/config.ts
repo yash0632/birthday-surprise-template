@@ -68,9 +68,9 @@ message: [
   "If someday you feel like having trips with us again and want to give us one more chance to be your friends, you know you can text us anytime anyday. ❤️",
  // "",
   "No Pressure,No Expectations",
-  "",
+  //"",
   "Happy Birthday!",
-  "",
+  "Take Care!",
   "- Jalkukda and gaubar"
 
 ],
