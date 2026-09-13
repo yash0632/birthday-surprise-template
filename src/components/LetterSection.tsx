@@ -11,7 +11,7 @@ import styles from "./LetterSection.module.css";
 import { config } from "../config";
 
 // Typing speed in milliseconds per character
-const TYPING_SPEED = 30;
+const TYPING_SPEED = 50;
 
 // Delay before starting typewriter effect
 const START_DELAY = 500;

@@ -15,7 +15,7 @@ export const config = {
 
   /* Section Headings */
   soloGalleryTitle: "✨ Birthday Girl ✨", // solo gallery title
-  messageTitle: "To My Favorite Person", // letter section title
+  messageTitle: "To Our Rewari Friend", // letter section title
   footerText: "Made with 💗 just for you", // footer text
 
   /* Button Labels */
@@ -32,17 +32,48 @@ export const config = {
   },
 
   /* Birthday Message: Each string is a paragraph */
-  message: [
-    "Happy Birthday, my love!",
-    "",
-    "I hope today is filled with joy, laughter, and all the little moments that make you smile. As you step into this new year, may it bring exciting opportunities, meaningful memories, and the confidence to chase everything you dream of.",
-    "",
-    "You have so much ahead of you, and I hope you never stop believing in yourself and all that you’re capable of. May this year be kind to you, rewarding, and full of reasons to celebrate.",
-    "",
-    "Wishing you a beautiful birthday and an even more amazing year to come.",
-    "",
-    "- With love,",
-  ],
+
+message: [
+
+  "First of all Happy Birthday Bhavna🥳🎂",
+  //"",
+  "I honestly really dont know what to say and i was not even sure whether i should do this or not.",
+  //"",
+  "I did quite a few mistakes this year and you have forgiven me for more than once, so i will not ask for forgiveness this time.",
+  //"",
+  "I just wanted to do something nice for you to make you feel special, to not let things end on bad terms so made this little website.",
+  //"",
+  "I know making this website does not make up for my mistakes and you might even think this is just another attempt to make you come back and join us again and honestly, i will be lying if i said its not.",
+  //"",
+  "I tried to make this website only to make you feel special on your birthday which you really are, no doubt in that and make you smile a little, but somewhere in all this one thousand four hundred thirty seven lines of code, there’s a tiny bit hope that may be one day you will forgive us and we can have trips together again as onlyplans (that whats our group name question and the onlyplans logo was anurag’s idea 😒🥲) - especially a mountain trip, we still remember you saying mountains were the place you’d most like to visit. So maybe someday. Who knows. 🏔️",
+  //"",
+  "But Really this time, we dont want to force anything and try not to do it ever again.",
+  //"",
+  "If you want to come back, we’ll be happy. If you don’t, we’ll respect that too.",
+  //"",
+  "We really wanted to celebrate your birthday with you at least once and once we both were making plans about it (Anurag said you will let us order anything on your birthday party😋)",
+  //"",
+  "So we are sorry for everything 🥲 - especially for the times we made things bad when they could have been better.",
+  //"",
+  "Anyway enough of all that,",
+  //"",
+  "Happy Birthday Once Again Bhavna🧿",
+  //"",
+  "We both hope this becomes one of your best birthdays, and we both hope every birthday after this one is even better.",
+  //"",
+  "We hope all your wishes come true and Hope you and your family will always be healthy, happy and always smiling.",
+  //"",
+  "Aur haan… Anurag specifically Beat me ki ye bhi likh 😵‍💫😵:",
+  //"",
+  "If someday you feel like having trips with us again and want to give us one more chance to be your friends, you know you can text us anytime anyday. ❤️",
+ // "",
+  "No Pressure,No Expectations",
+  "",
+  "Happy Birthday!",
+  "",
+  "- Jalkukda and gaubar"
+
+],
 
   /* Theme Colors - Change these to customize the entire website theme! */
   colors: {
