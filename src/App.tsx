@@ -17,61 +17,46 @@ import backgroundMusic from "./assets/music.mp3";
 import "./App.css";
 import GlimpseReveal from "./components/GlimpseReveal";
 // Import photos from assets/solo
-import s1 from "./assets/solo/s1.png";
-import s2 from "./assets/solo/s2.png";
-import s3 from "./assets/solo/s3.png";
-import s4 from "./assets/solo/s4.png";
-import s5 from "./assets/solo/s5.png";
-import s6 from "./assets/solo/s6.png";
-import v1 from "./assets/solo/v1.mp4";
-import v2 from "./assets/solo/v2.mp4";
-import v3 from "./assets/solo/v3.mp4";
-import v1_poster from "./assets/solo/v1-poster.jpg";
-import v2_poster from "./assets/solo/v2-poster.jpg";
-import v3_poster from "./assets/solo/v3-poster.jpg";
 
-// Import photos from assets/together (only if enabled)
-// These imports are tree-shaken if togetherGallery.enabled is false
-import t1 from "./assets/together/t1.png";
-import t2 from "./assets/together/t2.png";
-import t3 from "./assets/together/t3.png";
-import t4 from "./assets/together/t4.png";
-import t5 from "./assets/together/t5.png";
-import t6 from "./assets/together/t6.png";
-import t7 from "./assets/together/t7.png";
-import t8 from "./assets/together/t8.png";
-import t9 from "./assets/together/t9.png";
+import p1 from "./assets/solo/p1.jpeg"
+import p2 from "./assets/solo/p2.jpeg"
+//import p3 from "./assets/solo/p3.jpeg"
+import p4 from "./assets/solo/p4.jpeg"
+
+import m1 from "./assets/solo/m1.mp4";
+import m2 from "./assets/solo/m2.mp4";
+import m3 from "./assets/solo/m3.mp4";
+import m4 from "./assets/solo/m4.mp4";
+import m5 from "./assets/solo/m5.mp4";
+import m6 from "./assets/solo/m6.mp4";
+import m1_poster from "./assets/solo/m1-poster.jpeg";
+import m2_poster from "./assets/solo/m2-poster.jpeg";
+import m3_poster from "./assets/solo/m3-poster.jpeg";
+import m4_poster from "./assets/solo/m4-poster.jpeg";
+import m5_poster from "./assets/solo/m5-poster.jpeg";
+import m6_poster from "./assets/solo/m6-poster.jpeg";
+
+
 
 
 // Photo arrays
 const SOLO_PHOTOS: MediaItem[] = [
-  { type: "photo", src: s1 },
-  { type: "video", src: v1, poster: v1_poster, caption: "that laugh though 😂" },
-  { type: "photo", src: s2 },
-  { type: "photo", src: s3 },
-  { type: "video", src: v2, poster: v2_poster },
-  { type: "photo", src: s4 },
-  { type: "photo", src: s5 },
-  { type: "photo", src: s6 },
-  { type: "video", src: v3, poster: v3_poster, caption: "best day ever" },
+  { type: "photo", src: p1 },
+  { type: "video", src: m1, poster: m1_poster, caption: "that laugh though 😂" },
+  { type: "photo", src: p2 },
+  { type: "video", src: m2, poster: m2_poster, caption: "this one is a classic" },
+  { type: "video", src: m6, poster: m6_poster },
+  { type: "video", src: m3, poster: m3_poster },
+  { type: "video", src: m4, poster: m4_poster },
+  { type: "photo", src: p4 },
+  { type: "video", src: m5, poster: m5_poster, caption: "best day ever" },
 ];
-const TOGETHER_PHOTOS : MediaItem[] = config.togetherGallery.enabled
-  ? [
-      { type: "photo", src: t1 },
-      { type: "photo", src: t2 },
-      { type: "photo", src: t3 },
-      { type: "photo", src: t4 },
-      { type: "photo", src: t5 },
-      { type: "photo", src: t6 },
-      { type: "photo", src: t7 },
-      { type: "photo", src: t8 },
-      { type: "photo", src: t9 },
-    ]
-  : [];
+
 
 // Calculate total sections and indices based on config
-const TOTAL_SECTIONS = config.togetherGallery.enabled ? 4 : 3;
-const SECTION_LETTER = config.togetherGallery.enabled ? 3 : 2;
+// Sections: 0 = Hero, 1 = Solo Photos, 2 = Letter
+const TOTAL_SECTIONS = 3;
+const SECTION_LETTER = 2;
 
 export default function App() {
   // Track if user has clicked start
@@ -283,23 +268,7 @@ export default function App() {
             </motion.div>
           )}
 
-          {config.togetherGallery.enabled && currentSection === 2 && (
-            <motion.div
-              key="together-gallery"
-              variants={sectionVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="section-wrapper"
-            >
-              <PhotoGallery
-                title={config.togetherGallery.title}
-                photos={TOGETHER_PHOTOS}
-                buttonText={config.togetherGallery.buttonText}
-                onNextSection={goToNextSection}
-              />
-            </motion.div>
-          )}
+          
 
           {currentSection === SECTION_LETTER && (
             <motion.div

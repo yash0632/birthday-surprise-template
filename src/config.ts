@@ -21,7 +21,7 @@ export const config = {
   /* Button Labels */
   buttons: {
     hero: "Ready for a little surprise?", // hero/landing button
-    soloGallery: "Want to see more?", // solo gallery button
+    soloGallery: "One last thing...", // solo gallery button
   },
 
   /* Together Gallery (Optional) */
