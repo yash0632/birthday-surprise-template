@@ -15,7 +15,7 @@ export const config = {
 
   /* Section Headings */
   soloGalleryTitle: "✨ Birthday Girl ✨", // solo gallery title
-  messageTitle: "To Our Rewari Friend", // letter section title
+  messageTitle: "To Our Train Friend", // letter section title
   footerText: "Made with 💗 just for you", // footer text
 
   /* Button Labels */
@@ -39,11 +39,11 @@ message: [
   //"",
   "I honestly really dont know what to say and i was not even sure whether i should do this or not.You really would not have expect from us to do such a thing,dont really know if you would even like it or not but we really wanted to do something for you on your birthday and we both really hope you like it.",
   //"",
-  "I did quite a few mistakes this year and you have forgiven me for more than once, so i will not ask for forgiveness this time.",
+  //"I did quite a few mistakes this year and you have forgiven me for more than once, so i will not ask for forgiveness this time.",
   //"",
   "I just wanted to do something nice for you to make you feel special, to not let things end on bad terms so made this little website.",
   //"",
-  "I know making this website does not make up for my mistakes and you might even think this is just another attempt to make you come back and join us again and honestly, i will be lying if i said its not.",
+  //"I know making this website does not make up for my mistakes and you might even think this is just another attempt to make you come back and join us again and honestly, i will be lying if i said its not.",
   //"",
   "I tried to make this website only to make you feel special on your birthday which you really are, no doubt about that and make you smile a little, but somewhere in all this one thousand four hundred thirty seven lines of code, there’s a tiny bit hope that may be one day you will forgive us and we can have trips together again as onlyplans (that - whats our group name question and the loading of onlyplans logo was anurag’s idea 😒🥲) - especially a mountain trip, we still remember you saying mountains were the place you’d most like to visit. So maybe someday. Who knows. 🏔️",
   //"",

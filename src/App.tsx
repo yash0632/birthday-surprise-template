@@ -18,38 +18,42 @@ import "./App.css";
 import GlimpseReveal from "./components/GlimpseReveal";
 // Import photos from assets/solo
 
-import p1 from "./assets/solo/p1.jpeg"
+//import p1 from "./assets/solo/p1.jpeg"
 import p2 from "./assets/solo/p2.jpeg"
 //import p3 from "./assets/solo/p3.jpeg"
 import p4 from "./assets/solo/p4.jpeg"
+import p7 from "./assets/solo/p7.jpeg"
+import p8 from "./assets/solo/p8.jpeg"
+import p9 from "./assets/solo/p9.jpeg"
 
 import m1 from "./assets/solo/m1.mp4";
 import m2 from "./assets/solo/m2.mp4";
 import m3 from "./assets/solo/m3.mp4";
 import m4 from "./assets/solo/m4.mp4";
-import m5 from "./assets/solo/m5.mp4";
-import m6 from "./assets/solo/m6.mp4";
+//import m5 from "./assets/solo/m5.mp4";
+//import m6 from "./assets/solo/m6.mp4";
 import m1_poster from "./assets/solo/m1-poster.jpeg";
 import m2_poster from "./assets/solo/m2-poster.jpeg";
 import m3_poster from "./assets/solo/m3-poster.jpeg";
 import m4_poster from "./assets/solo/m4-poster.jpeg";
-import m5_poster from "./assets/solo/m5-poster.jpeg";
-import m6_poster from "./assets/solo/m6-poster.jpeg";
+//import m5_poster from "./assets/solo/m5-poster.jpeg";
+//import m6_poster from "./assets/solo/m6-poster.jpeg";
 import onlyplansImg from "./assets/onlyplans.jpg";
+
 
 
 
 // Photo arrays
 const SOLO_PHOTOS: MediaItem[] = [
-  { type: "photo", src: p1 },
+  { type: "photo", src: p9 },
   { type: "video", src: m1, poster: m1_poster, caption: "that laugh though 😂" },
   { type: "photo", src: p2 },
-  { type: "video", src: m2, poster: m2_poster, caption: "this one is a classic" },
-  { type: "video", src: m6, poster: m6_poster },
+  { type: "video", src: m4, poster: m4_poster, caption: "this one is a classic" },
+  { type: "photo", src: p7 },
   { type: "video", src: m3, poster: m3_poster },
-  { type: "video", src: m4, poster: m4_poster },
+  { type: "video", src: m2 ,poster: m2_poster},
   { type: "photo", src: p4 },
-  { type: "video", src: m5, poster: m5_poster, caption: "best day ever" },
+  { type: "photo", src: p8, caption: "best day ever" },
 ];
 
 

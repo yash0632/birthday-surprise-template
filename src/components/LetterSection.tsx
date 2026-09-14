@@ -31,7 +31,7 @@ const START_DELAY = 500;
 // The index (in config.message) of the paragraph that's the emotional
 // crux of the letter — it gets slower typing, longer pauses around it,
 // and a distinct visual treatment so she really sits with it.
-const EMPHASIS_INDEX = 5;
+const EMPHASIS_INDEX = 3;
 const EMPHASIS_SPEED_MULTIPLIER = 1.9; // ~2x slower per character
 const PRE_EMPHASIS_PAUSE = 1100; // beat of silence before it starts
 const POST_EMPHASIS_PAUSE = 1600; // hold after it finishes, before continuing
