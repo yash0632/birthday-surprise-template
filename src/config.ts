@@ -71,7 +71,7 @@ message: [
   //"",
   "Happy Birthday!",
   "Take Care!",
-  "- Jalkukda(yash) and gaubar(anurag)"
+  "- Jalkhurra(yash) and gaubar(anurag)"
 
 ],
 
