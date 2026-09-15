@@ -12,10 +12,8 @@ import { motion, useInView } from "framer-motion";
 import styles from "./LetterSection.module.css";
 import { config } from "../config";
 
-// Base delay per character (ms) for normal paragraphs
 const BASE_SPEED = 35;
 
-// Extra pause (ms) added after certain characters — natural reading rhythm
 const PAUSE_AFTER: Record<string, number> = {
   ",": 150,
   "—": 150,
@@ -28,19 +26,17 @@ const PAUSE_AFTER: Record<string, number> = {
 
 const START_DELAY = 500;
 
-// The index (in config.message) of the paragraph that's the emotional
-// crux of the letter — it gets slower typing, longer pauses around it,
-// and a distinct visual treatment so she really sits with it.
 const EMPHASIS_INDEX = 3;
-const EMPHASIS_SPEED_MULTIPLIER = 1.9; // ~2x slower per character
-const PRE_EMPHASIS_PAUSE = 1100; // beat of silence before it starts
-const POST_EMPHASIS_PAUSE = 1600; // hold after it finishes, before continuing
+const EMPHASIS_SPEED_MULTIPLIER = 1.9;
+const PRE_EMPHASIS_PAUSE = 1100;
+const POST_EMPHASIS_PAUSE = 1600;
 
 export default function LetterSection() {
-  // Paragraphs fully typed and finalized
-  const [completedParagraphs, setCompletedParagraphs] = useState<string[]>([]);
-  // The paragraph currently being typed
-  const [currentParagraphIndex] = useState(0);
+  // How many paragraphs (from the start) are fully typed.
+  // Derived rendering from this count makes duplicates structurally
+  // impossible — even if something fires this update twice for the
+  // same paragraph, Math.max() below makes it a harmless no-op.
+  const [completedCount, setCompletedCount] = useState(0);
   const [currentTypedText, setCurrentTypedText] = useState("");
   const [isTypingComplete, setIsTypingComplete] = useState(false);
 
@@ -49,23 +45,29 @@ export default function LetterSection() {
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const isUserScrolledAwayRef = useRef(false);
 
-  // Guards against the typing effect ever running more than once,
-  // no matter how many times isInView fires or the effect re-triggers
-  // (e.g. on scroll). Without this, scrolling could restart the whole
-  // typing sequence and duplicate paragraphs at the bottom.
+  // Guards against the whole typing sequence ever starting twice
   const hasStartedTypingRef = useRef(false);
+  // Extra safety net: if the effect is ever cleaned up mid-sequence
+  // (unmount, dev double-invoke, fast refresh), any timers already
+  // in flight check this before touching state, so a stray leftover
+  // callback can never sneak in an update after the fact
+  const cancelledRef = useRef(false);
 
   const paragraphs = config.message;
 
   useEffect(() => {
+    cancelledRef.current = false;
+
     if (!isInView || hasStartedTypingRef.current) return;
-    hasStartedTypingRef.current = true; // lock — this effect body can only ever run once
+    hasStartedTypingRef.current = true;
 
     let paraIndex = 0;
     let charIndex = 0;
     let timeoutId: ReturnType<typeof setTimeout>;
 
     const typeParagraph = () => {
+      if (cancelledRef.current) return;
+
       if (paraIndex >= paragraphs.length) {
         setIsTypingComplete(true);
         return;
@@ -76,9 +78,13 @@ export default function LetterSection() {
       const speedMultiplier = isEmphasis ? EMPHASIS_SPEED_MULTIPLIER : 1;
 
       const typeNextChar = () => {
+        if (cancelledRef.current) return;
+
         if (charIndex >= text.length) {
-          // Paragraph finished — commit it, move to the next
-          setCompletedParagraphs((prev) => [...prev, text]);
+          const finishedIndex = paraIndex;
+          // Math.max guarantees this can never move the count backwards
+          // or double-count — even a stray duplicate call is a no-op
+          setCompletedCount((prev) => Math.max(prev, finishedIndex + 1));
           setCurrentTypedText("");
           paraIndex++;
           charIndex = 0;
@@ -99,7 +105,6 @@ export default function LetterSection() {
         );
       };
 
-      // Extra beat of silence right before the emphasis paragraph begins
       const startPause = isEmphasis ? PRE_EMPHASIS_PAUSE : 0;
       timeoutId = setTimeout(typeNextChar, startPause);
     };
@@ -107,13 +112,12 @@ export default function LetterSection() {
     const startTimeout = setTimeout(typeParagraph, START_DELAY);
 
     return () => {
+      cancelledRef.current = true;
       clearTimeout(startTimeout);
       clearTimeout(timeoutId);
     };
   }, [isInView, paragraphs]);
 
-  // Detect manual scroll — if she scrolls up, stop auto-following;
-  // if she scrolls back down near the bottom herself, resume auto-follow
   useEffect(() => {
     const el = contentRef.current;
     if (!el) return;
@@ -121,8 +125,6 @@ export default function LetterSection() {
     const handleScroll = () => {
       const distanceFromBottom =
         el.scrollHeight - el.scrollTop - el.clientHeight;
-      // Small threshold so it still counts as "at bottom" even with
-      // sub-pixel rounding differences
       isUserScrolledAwayRef.current = distanceFromBottom > 40;
     };
 
@@ -130,21 +132,19 @@ export default function LetterSection() {
     return () => el.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Keep the letter auto-scrolled to the latest typed line —
-  // but only if she hasn't manually scrolled up to reread something
   useEffect(() => {
     if (contentRef.current && !isUserScrolledAwayRef.current) {
       contentRef.current.scrollTop = contentRef.current.scrollHeight;
     }
-  }, [completedParagraphs, currentTypedText]);
+  }, [completedCount, currentTypedText]);
 
-  // Tap to skip straight to the full letter
   const skipToEnd = () => {
     if (!isTypingComplete) {
-      setCompletedParagraphs(paragraphs);
+      cancelledRef.current = true; // stop any in-flight timers immediately
+      setCompletedCount(paragraphs.length);
       setCurrentTypedText("");
       setIsTypingComplete(true);
-      isUserScrolledAwayRef.current = false; // let it settle at the bottom after skip
+      isUserScrolledAwayRef.current = false;
     }
   };
 
@@ -172,7 +172,7 @@ export default function LetterSection() {
         <div className={styles.cornerBottomRight} />
 
         <div className={styles.letterContent} ref={contentRef}>
-          {completedParagraphs.map((text, i) => (
+          {paragraphs.slice(0, completedCount).map((text, i) => (
             <p
               key={i}
               className={
@@ -188,8 +188,7 @@ export default function LetterSection() {
           {!isTypingComplete && currentTypedText && (
             <p
               className={
-                currentParagraphIndex === EMPHASIS_INDEX ||
-                completedParagraphs.length === EMPHASIS_INDEX
+                completedCount === EMPHASIS_INDEX
                   ? `${styles.messageParagraph} ${styles.emphasisParagraph}`
                   : styles.messageParagraph
               }

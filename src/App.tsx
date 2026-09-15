@@ -39,6 +39,8 @@ import m4_poster from "./assets/solo/m4-poster.jpeg";
 //import m5_poster from "./assets/solo/m5-poster.jpeg";
 //import m6_poster from "./assets/solo/m6-poster.jpeg";
 import onlyplansImg from "./assets/onlyplans.jpg";
+import bannerImg from "./assets/banner.gif";
+import cakeImg from "./assets/cake.gif";
 
 
 
@@ -80,6 +82,13 @@ export default function App() {
   // Preload the glimpse image
   new Image().src = onlyplansImg;
 
+  // Preload the Hero section's banner + cake GIFs so they're
+  // already cached by the time she reaches Hero — these are the
+  // very first visuals she sees after the glimpse, and GIFs can
+  // be surprisingly heavy files, so give them a head start too
+  new Image().src = bannerImg;
+  new Image().src = cakeImg;
+
   // Preload every photo and video poster in the gallery — these are
   // small (a few KB–hundred KB each) so it's safe to load them all
   // upfront, meaning by the time she reaches the gallery, every card
@@ -102,8 +111,6 @@ export default function App() {
     const video = document.createElement("video");
     video.src = item.src;
     video.preload = "auto";
-    // no need to attach it to the DOM — just triggers the browser to
-    // start fetching and buffering it in the background
   });
 }, []);
   

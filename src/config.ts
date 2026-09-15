@@ -45,7 +45,7 @@ message: [
   //"",
   //"I know making this website does not make up for my mistakes and you might even think this is just another attempt to make you come back and join us again and honestly, i will be lying if i said its not.",
   //"",
-  "I tried to make this website only to make you feel special on your birthday which you really are, no doubt about that and make you smile a little, but somewhere in all this one thousand four hundred thirty seven lines of code, there’s a tiny bit hope that may be one day you will forgive us and we can have trips together again as onlyplans (that - whats our group name question and the loading of onlyplans logo was anurag’s idea 😒🥲) - especially a mountain trip, we still remember you saying mountains were the place you’d most like to visit. So maybe someday. Who knows. 🏔️",
+  "I know making up this website does not make up for my mistakes. I tried to make this website only to make you feel special on your birthday which you really are, no doubt about that and make you smile a little, but somewhere in all this one thousand four hundred thirty seven lines of code, there’s a tiny bit hope that may be one day you will forgive us and we can have trips together again as onlyplans (that - whats our group name question and the loading of onlyplans logo was anurag’s idea 😒🥲) - especially a mountain trip, we still remember you saying mountains were the place you’d most like to visit. So maybe someday. Who knows. 🏔️",
   //"",
   "But Really this time, we dont want to force anything and try not to do it ever again.",
   //"",
@@ -71,7 +71,7 @@ message: [
   //"",
   "Happy Birthday!",
   "Take Care!",
-  "- Jalkhurra(yash) and gaubar(anurag)"
+  "- Jalankhurra(yash) and gaubar(anurag)"
 
 ],
 
