@@ -419,3 +419,127 @@ video.photo {
   100% { background-position: -200% 0; }
 }
 
+/* ==========================================
+   Gallery subtitle + favorite counter
+   ========================================== */
+.gallerySubtitle {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: clamp(0.75rem, 2vw, 0.9rem);
+  color: rgba(139, 69, 99, 0.65);
+  text-align: center;
+  margin: -0.5rem 0 0.25rem;
+  z-index: 1;
+}
+
+.favoriteCount {
+  font-family: "Dancing Script", cursive;
+  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+  color: #ec4899;
+  text-align: center;
+  margin: 0.25rem 0 0;
+  z-index: 1;
+}
+
+/* ==========================================
+   Favorite heart button
+   ========================================== */
+.favoriteButton {
+  position: absolute;
+  top: min(0.8vh, 6px);
+  left: min(0.6vh, 6px);
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+  z-index: 5;
+}
+
+.favoriteButton:hover {
+  transform: scale(1.15);
+}
+
+.favoriteButtonActive {
+  background: rgba(255, 240, 246, 0.95);
+}
+
+/* Permanent soft glow once a memory is favorited */
+.polaroidFavorited {
+  box-shadow: 0 0 0 2px rgba(244, 114, 182, 0.6),
+    0 8px 24px rgba(244, 114, 182, 0.3), 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+/* ==========================================
+   Lightbox
+   ========================================== */
+.lightboxOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(26, 15, 24, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  backdrop-filter: blur(4px);
+}
+
+.lightboxContent {
+  position: relative;
+  max-width: min(90vw, 520px);
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: white;
+  border-radius: 12px;
+  padding: 1rem 1rem 1.25rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.lightboxMedia {
+  width: 100%;
+  max-height: 65vh;
+  object-fit: contain;
+  border-radius: 6px;
+  background: #000;
+}
+
+.lightboxCaption {
+  font-family: "Dancing Script", cursive;
+  font-size: 1.15rem;
+  color: #8b4563;
+  margin: 0.75rem 0 0;
+  text-align: center;
+}
+
+.lightboxClose {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: white;
+  color: #8b4563;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.lightboxClose:hover {
+  transform: scale(1.1);
+}
